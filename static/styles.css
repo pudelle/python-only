@@ -1,0 +1,905 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    width: 100%; /* Устанавливаем ширину в 100% */
+    overflow-x: hidden; /* Отключаем горизонтальный скролл */
+}
+
+/* Общий стиль для контейнера на ПК */
+.container {
+    display: flex;
+    flex-direction: row; /* Элементы располагаются в строку */
+    flex-wrap: nowrap;
+    min-height: 100vh; /* Минимальная высота — высота окна */
+    width: 100%; /* Занимает всю ширину экрана */
+    height: auto; /* Высота растягивается по содержимому */
+    box-sizing: border-box; /* Учитываем padding и border в ширине */
+}
+
+/* Общий стиль для категорий на ПК */
+.categories {
+    width: 250px; /* Фиксированная ширина для ПК */
+    margin-right: 20px; /* Отступ справа от категорий */
+    padding: 10px; /* Внутренние отступы */
+    background-color: #f9f9f9; /* Фон для категорий */
+    border-right: 1px solid #ddd; /* Разделительная линия справа */
+}
+
+/* Мобильная версия */
+@media (max-width: 768px) {
+    .container {
+        display: block; /* Переключаем контейнер на блочное расположение */
+        width: 100%; /* Используем всю ширину экрана */
+        padding: 0; /* Убираем внутренние отступы */
+        margin: 0; /* Убираем внешние отступы */
+        box-sizing: border-box; /* Учитываем padding и border в ширине */
+    }
+    
+    .categories {
+        position: static; /* Убираем фиксированное положение */
+        width: 100%; /* Растягиваем категории на всю ширину экрана */
+        margin: 0; /* Убираем внешние отступы */
+        padding: 0px; /* Внутренние отступы для удобства */
+        background-color: #f4f4f4;
+        border: none; /* Убираем линию справа */
+        border-bottom: 1px solid #ddd; /* Разделительная линия снизу */
+    }
+    
+    .categories .search-bar {
+        margin-bottom: 15px; /* Отступ под строкой поиска */
+    }
+    
+    .category-tree {
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 30px;
+        background-color: #f9f9f9;
+        max-width: 220px; /* Ограничение ширины для ПК */
+        margin: 0 auto; /* Центрируем блок на ПК */
+    }
+    
+    /* Мобильная версия */
+    @media (max-width: 768px) {
+        .category-tree {
+            display: flex; /* Для горизонтального расположения */
+            flex-wrap: nowrap; /* Запрещаем перенос элементов */
+            overflow-x: auto; /* Включаем горизонтальную прокрутку */
+            gap: 10px; /* Расстояние между элементами */
+            padding: 10px; /* Внутренние отступы */
+            border: 1px solid #ddd; /* Граница */
+            border-radius: 20px; /* Закругление */
+            background-color: #f9f9f9; /* Фон */
+            width: calc(90% - -20px); /* Занимаем всю ширину экрана с отступами по 10px */
+            margin: 0 auto; /* Центрируем блок */
+            box-sizing: border-box; /* Учитываем padding и border в итоговой ширине */
+            max-width: none; /* Ограничение ширины для ПК */
+            margin-right: 10px;
+        }
+    }
+    
+    @media (max-width: 768px) {
+        .category-tree button {
+            flex: 0 0 auto;
+            background-color: #f1f1f1;
+            color: black;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            padding: 10px 15px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+            width: calc(100% - 20px); /* Занимает всю ширину экрана с отступами по 10px */
+            margin: 10px; /* Отступы со всех сторон */
+            
+            /* Ограничение текста максимум двумя строками */
+            white-space: normal; /* Разрешить перенос текста */
+            overflow: hidden; /* Скрыть текст, выходящий за пределы */
+            text-overflow: ellipsis; /* Добавить многоточие для обрезанного текста */
+            display: -webkit-box; /* Включить режим для ограничения строк */
+            -webkit-box-orient: vertical; /* Вертикальная ориентация текста */
+            -webkit-line-clamp: 2; /* Ограничить текст максимум двумя строками */
+            
+            /* Гибкость кнопок для расширения */
+            min-width: 100px; /* Минимальная ширина кнопки */
+            max-width: auto; /* Кнопка может расширяться */
+            height: auto; /* Высота адаптивная */
+        }
+    }
+    
+    .category-tree button:hover {
+        background-color: #f0f0f0;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+}
+
+/* Общие стили для кнопки корзины */
+.cart-button {
+    background-color: #fff;
+    color: white;
+    padding: -10px 0px;
+    font-size: 8px;
+    border-radius: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    z-index: 1000;
+    text-align: center;
+}
+
+/* Стили для компьютеров (ширина экрана > 768px) */
+@media (min-width: 769px) {
+    .cart-button {
+        position: absolute; /* Относительное расположение внутри .categories */
+        bottom: 20px; /* Расположение кнопки под категориями */
+        left: 20px; /* Отступ от левой границы категории */
+        width: 200px; /* Фиксированная ширина кнопки */
+        transform: none; /* Убираем центрирование */
+        margin-left: 20px;
+        
+    }
+}
+
+/* Стили для мобильных устройств (ширина экрана ≤ 768px) */
+@media (max-width: 768px) {
+    .cart-button {
+        position: fixed; /* Закрепляем кнопку внизу экрана */
+        left: 0;
+        right: 0;
+        bottom: 0;
+        width: 100%; /* Растягиваем кнопку по ширине экрана */
+        padding: 1px;
+        font-size: 18px; /* Увеличенный шрифт для мобильных */
+        transform: none; /* Убираем центрирование */
+        text-align: center;
+        border-radius: 0px;
+    }
+}
+
+/* Ховер-эффекты для кнопки */
+.cart-button:hover {
+    background-color: #0056b3;
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2);
+}
+
+.cart-button button {
+    background-color: #fff;
+    color: #141414;
+    padding: 10px 20px;
+    font-size: 16px;
+    width: 200px;
+    border: 1px solid #141414; /* Толщина 2px, цвет тёмно-синий */
+    border-radius: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    z-index: 1000;
+    text-align: center;
+}
+
+.cart-button button:hover {
+    background-color: #141414;
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2);
+    color: white;
+}
+
+/* Стили для мобильных устройств (ширина экрана ≤ 768px) */
+@media (max-width: 768px) {
+    .cart-button button {
+        position: fixed; /* Закрепляем кнопку внизу экрана */
+        left: 0;
+        right: 0;
+        bottom: 0;
+        width: 100%; /* Растягиваем кнопку по ширине экрана */
+        padding: 1px;
+        border: 0px solid #141414;
+        font-size: 18px; /* Увеличенный шрифт для мобильных */
+        transform: none; /* Убираем центрирование */
+        text-align: center;
+        border-radius: 0px;
+        height: 40px;
+        box-shadow: 4px 0 12px rgba(0.1, 0.1, 0.1, 0.1);
+    }
+}
+
+
+.categories ul {
+    list-style: none;
+    padding: 0;
+}
+
+.categories ul li {
+    margin: 10px 0;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.categories ul li:hover {
+    color: #007BFF;
+    border: 1px solid #141414; /* Толщина 2px, цвет тёмно-синий */
+}
+
+main {
+    flex: 1;
+    padding: 20px;
+}
+
+/* Дефолтный стиль для ПК */
+.search-bar {
+    display: flex;
+    align-items: center; /* Центрируем элементы по вертикали */
+    justify-content: flex-start; /* Содержимое выравнивается в начале строки */
+    position: relative; /* Позиционирование для дочерних элементов */
+    margin-top: 20px;
+    margin-bottom: 20px;
+    max-width: 600px; /* Ограничиваем ширину строки поиска */
+    width: 100%; /* Строка поиска занимает 100% доступной ширины */
+    margin-left: auto; /* Центрируем по горизонтали */
+    margin-right: auto; /* Центрируем по горизонтали */
+}
+
+.search-input {
+    width: 100%;
+    padding: 10px 40px 10px 20px; /* Добавляем место для кнопки справа */
+    border: 1px solid #ccc;
+    border-radius: 25px; /* Закругленные углы */
+    font-size: 16px;
+    color: #555;
+    outline: none;
+    transition: border-color 0.3s ease;
+}
+
+.search-input::placeholder {
+    color: #aaa; /* Цвет текста placeholder */
+    font-style: italic;
+}
+
+.search-input:focus {
+    border-color: #888; /* Цвет рамки при фокусе */
+}
+
+.search-btn {
+    position: absolute;
+    right: 15px; /* Размещаем кнопку справа внутри строки поиска */
+    top: 50%; /* Выравниваем по вертикали */
+    transform: translateY(-50%); /* Центрируем относительно вертикали */
+    border: none;
+    background: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+}
+
+.search-btn svg {
+    fill: #888; /* Цвет иконки */
+    transition: fill 0.3s ease;
+}
+
+.search-btn:hover svg {
+    fill: #555; /* Цвет иконки при наведении */
+}
+
+/* Мобильная версия */
+@media (max-width: 768px) {
+    .search-bar {
+        width: calc(100% - 20px); /* Занимает всю ширину экрана с отступами по 10px */
+        margin: 10px; /* Отступы со всех сторон */
+        max-width: none; /* Убираем ограничение по ширине */
+    }
+    
+    .search-input {
+        padding: 10px 40px 10px 15px; /* Немного уменьшаем внутренние отступы */
+        font-size: 14px; /* Уменьшаем размер шрифта для мобильных */
+    }
+    
+    .search-btn {
+        right: 10px; /* Корректируем позицию кнопки */
+    }
+}
+
+.quantity-container {
+    display: flex; /* Располагаем текст и кнопки в одну строку */
+    align-items: center; /* Выравниваем элементы по вертикали */
+    gap: 20px; /* Отступ между текстом "Остаток" и кнопками */
+}
+
+.quantity-controls {
+    display: flex; /* Используем Flexbox для горизонтального расположения элементов */
+    align-items: center; /* Центрируем элементы по вертикали */
+    gap: 10px; /* Отступ между кнопками и текстом */
+    margin-bottom: 5px;
+}
+
+.decrease {
+    display: flex; /* Используем Flexbox для выравнивания содержимого */
+    align-items: center; /* Центрируем текст по вертикали */
+    justify-content: center; /* Центрируем текст по горизонтали */
+    padding: 10px;
+    height: 27px;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    font-size: 18px;
+    cursor: pointer;
+    text-align: center;
+    text-overflow: ellipsis;
+    transition: background-color 0.3s ease;
+    background-color: #ea5a4b; /* Красный цвет для левой кнопки */
+}
+
+.decrease:hover {
+    background-color: #82332b; /* Более тёмный красный при наведении */
+}
+
+.increase {
+    display: flex; /* Используем Flexbox для выравнивания содержимого */
+    align-items: center; /* Центрируем текст по вертикали */
+    justify-content: center; /* Центрируем текст по горизонтали */
+    padding: 10px;
+    height: 27px;
+    color: white;
+    border: none;
+    border-radius: 100px;
+    font-size: 18px;
+    cursor: pointer;
+    text-align: center;
+    text-overflow: ellipsis;
+    transition: background-color 0.3s ease;
+    background-color: #46b48d; /* green цвет для левой кнопки */
+}
+
+.increase:hover {
+    background-color: #205240; /* Более тёмный green при наведении */
+}
+
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); /* Увеличен минимальный размер карточки */
+    gap: 20px;
+}
+
+.product-card {
+    width: 100%; /* Делаем карточки одинаковой ширины */
+    height: 400px; /* Фиксируем высоту карточек */
+    border: 1px solid #ddd;
+    padding: 0px;
+    border-radius: 20px;
+    background-color: #fff;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: box-shadow 0.3s ease, background-color 0.3s ease;
+    overflow: hidden;
+    cursor: pointer; /* Добавляем указатель при наведении на карточку */
+}
+
+.product-card.out-of-stock {
+    background-color: #f5f5f5; /* Красноватый цвет для карточек с нулевым остатком */
+    color: #A9A9A9;
+    pointer-events: none; /* Отключаем кликабельность */
+}
+.product-card.out-of-stock img {
+    max-width: 100%;
+    height: 190px; /* Фиксируем высоту изображения */
+    object-fit: cover; /* Обрезаем изображение, если оно выходит за рамки */
+    border-radius: 5px;
+    opacity: 40%;
+}
+
+.product-card h3 {
+    margin-top: 5px;
+    margin-left: 5px;
+    font-size: 16px;
+    text-align: left;
+}
+
+.product-card img {
+    max-width: 100%;
+    height: 190px; /* Фиксируем высоту изображения */
+    object-fit: cover; /* Обрезаем изображение, если оно выходит за рамки */
+    border-radius: 5px;
+}
+
+.product-card .product-description {
+    margin-top: -3px;
+    margin-left: 5px;
+    font-size: 14px;
+    color: #A9A9A9;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: left;
+    display: -webkit-box;
+    -webkit-line-clamp: 4; /* Ограничиваем текст до 3 строк */
+    -webkit-box-orient: horizontal;
+}
+
+.product-card .actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 5px;
+}
+
+.add-to-cart {
+    padding: 10px 10px;
+    background-color: #141414;
+    color: #fff;
+    border: none;
+    border-radius: 0px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.add-to-cart:hover {
+    background-color: #46b48d;
+}
+
+.product-card .actions span {
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+}
+
+
+/* Основные категории */
+.category-button {
+    background-color: #141414; /* Зеленый фон */
+    color: white;
+    font-size: 16px;
+    padding: 8px 16px;
+    border-radius: 30px;
+    margin-bottom: 10px;
+    width: 100%; /* Растягиваем на всю ширину */
+    text-align: left;
+    cursor: pointer;
+    border: none; /* Убираем границу */
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.category-button:hover {
+    background-color: #f1f1f1;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    color: #333;
+    border: 1px solid #141414; /* Толщина 2px, цвет тёмно-синий */
+}
+
+/* Стили для мобильных устройств */
+@media (max-width: 768px) {
+    .category-tree button {
+        background-color: #f1f1f1; /* Светлый фон */
+        color: black;
+        border: 1px solid #ddd; /* Легкая граница */
+        border-radius: 20px; /* Закругленные углы */
+        padding: 10px 15px; /* Увеличенный отступ */
+        font-size: 14px; /* Уменьшенный размер текста */
+        text-align: center; /* Текст центрируется */
+        
+        /* Ограничение текста максимум двумя строками */
+        white-space: normal; /* Разрешить перенос текста */
+        overflow: hidden; /* Скрыть текст, выходящий за пределы */
+        text-overflow: ellipsis; /* Добавить многоточие для обрезанного текста */
+        display: -webkit-box; /* Включить режим для ограничения строк */
+        -webkit-box-orient: vertical; /* Вертикальная ориентация текста */
+        -webkit-line-clamp: 2; /* Ограничить текст максимум двумя строками */
+        
+        /* Гибкость кнопок для расширения */
+        height: auto; /* Высота адаптивная */
+    }
+    
+    .category-tree button:hover {
+        background-color: #f0f0f0; /* Светло-серый фон при наведении */
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Мягкая тень */
+    }
+}
+
+/* Подкатегории контейнера */
+.subcategory-container {
+    margin-left: 15px;
+    transition: max-height 0.3s ease-out;
+    overflow: hidden;
+}
+
+/* Подкатегории */
+.subcategory-button {
+    background-color: #f1f1f1; /* Светлый фон для подкатегорий */
+    color: #333;
+    font-size: 14px;
+    padding: 6px 14px;
+    border-radius: 30px;
+    margin-bottom: 8px;
+    width: 90%; /* Немного меньше ширины основной категории */
+    text-align: left;
+    cursor: pointer;
+    border: none; /* Убираем границу */
+    transition: background-color 0.3s ease;
+}
+
+.subcategory-button:hover {
+    background-color: #ddd;
+    border: 1px solid #141414; /* Толщина 2px, цвет тёмно-синий */
+}
+
+.subcategory-button:active {
+    background-color: #ccc;
+    border: 1px solid #46b48d; /* Толщина 2px, цвет тёмно-синий */
+}
+
+/* Подкатегории второго уровня */
+.subsub-category-button {
+    background-color: #e0e0e0; /* Еще более светлый фон для второго уровня */
+    color: #333;
+    font-size: 12px;
+    padding: 4px 12px;
+    border-radius: 30px;
+    margin-bottom: 6px;
+    width: 80%; /* Еще меньше ширина для вложенных категорий */
+    text-align: left;
+    cursor: pointer;
+    border: none; /* Убираем границу */
+}
+
+.subsub-category-button:hover {
+    background-color: #ccc;
+    border: 1px solid #141414; /* Толщина 2px, цвет тёмно-синий */
+}
+
+.subsub-category-button:active {
+    background-color: #bbb;
+    border: 1px solid #46b48d; /* Толщина 2px, цвет тёмно-синий */
+}
+
+
+/* Модальное окно */
+.modal {
+    display: none; /* Скрыто по умолчанию */
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5); /* Полупрозрачный черный фон */
+}
+
+.modal-content {
+    background-color: #fff;
+    margin: 2% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    max-width: 1200px; /* Максимальная ширина окна для Macbook */
+    display: flex;
+    flex-direction: column;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.modal-header {
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 0px;
+    color: #333;
+}
+
+/* Основной контент окна */
+.modal-body {
+    display: flex;
+    gap: 20px; /* Отступ между фото и блоком с текстом */
+    align-items: flex-start; /* Выровнять верхние части блоков (изображение и текст) */
+}
+
+.image-gallery {
+    flex: 1; /* Изображение занимает 50% ширины */
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; /* Выровнять верх изображения по верхней границе */
+}
+
+.image-gallery img {
+    max-width: 100%;
+    max-height: 600px; /* Ограничиваем высоту */
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.description-title {
+    font-size: 18px;
+    font-weight: bold;
+    margin: 0 0 0px 0; /* Отступ снизу */
+    color: #111;
+}
+
+.details {
+    flex: 1; /* Описание занимает 50% ширины */
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* Выровнять элементы по левому краю */
+    justify-content: flex-start; /* Начать размещение элементов сверху */
+    gap: 10px; /* Отступы между элементами (заголовок, описание, кнопки) */
+    margin-top: 0; /* Убираем лишний отступ */
+}
+
+.details h1 {
+    font-size: 24px; /* Размер заголовка */
+    font-weight: bold;
+    margin: 0; /* Убираем отступы */
+    color: #333;
+    position: relative; /* Для выравнивания */
+    top: 0; /* Убираем смещение вниз */
+    text-align: left; /* Выровнять текст по левому краю */
+}
+
+.details p {
+    font-size: 16px;
+    line-height: 1.5;
+    color: #555;
+    margin: 0; /* Убираем отступы */
+    white-space: normal; /* Позволяет тексту занимать несколько строк */
+    overflow: visible; /* Убирает обрезание текста */
+    text-overflow: clip; /* Убирает "..." */
+}
+.details .quantity-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Отступ между кнопками и количеством */
+}
+
+.details .quantity-controls button {
+    display: flex; /* Используем Flexbox для выравнивания содержимого */
+    align-items: center; /* Центрируем текст по вертикали */
+    justify-content: center; /* Центрируем текст по горизонтали */
+    padding: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    height: 30px;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    font-size: 18px;
+    cursor: pointer;
+    text-align: center;
+    text-overflow: ellipsis;
+    transition: background-color 0.3s ease;
+}
+
+.details .quantity-controls button:first-child {
+    background-color: #ea5a4b; /* Красный цвет для левой кнопки */
+}
+
+.details .quantity-controls button:first-child:hover {
+    background-color: #82332b; /* Более тёмный красный при наведении */
+}
+
+.details .quantity-controls button:last-child {
+    background-color: #46b48d; /* Зелёный цвет для правой кнопки */
+}
+
+.details .quantity-controls button:last-child:hover {
+    background-color: #205240; /* Более тёмный зелёный при наведении */
+}
+
+.details .quantity-controls .quantity {
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+    min-width: 40px;
+    text-align: center;
+}
+
+.details .add-to-cart {
+    padding: 10px 20px;
+    background-color: #141414;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    font-size: 18px;
+    cursor: pointer;
+    text-align: center;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    align-self: flex-start; /* Привязать кнопку к левому краю */
+}
+
+.details .add-to-cart:hover {
+    background-color: #46b48d;
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Кнопка закрытия */
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    position: absolute;
+    right: 20px;
+    top: 20px;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.container2-header {
+    text-align: center; /* Выравнивание текста по центру */
+    margin-top: 20px; /* Отступ сверху для визуального разделения */
+}
+
+/* Сетка корзины */
+.cart-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
+
+/* Карточка товара */
+.cart-item {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 15px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.cart-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Мини-превью изображения */
+.cart-item img.cart-item-image {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-right: 15px;
+}
+
+/* Данные товара */
+.item-details {
+    flex: 1;
+}
+
+.item-details h3 {
+    font-size: 18px;
+    margin: 0 0 8px;
+}
+
+.item-details p {
+    font-size: 14px;
+    color: #666;
+    margin: 0 0 10px;
+}
+
+/* Контейнер для действий */
+.cart-item-actions {
+    display: flex;              /* Включаем горизонтальное выравнивание */
+    align-items: center;        /* Выравнивание элементов по вертикали */
+    justify-content: flex-start; /* Элементы выстраиваются слева направо */
+    gap: 10px;                  /* Расстояние между кнопками */
+    margin-top: 10px;           /* Отступ сверху */
+}
+
+/* Контролы количества */
+.quantity-controls {
+    display: flex;
+    align-items: center;
+    gap: 5px; /* Расстояние между кнопками + и - */
+}
+
+/* Кнопка "Удалить" */
+.remove-item {
+    background-color: #ff4d4d;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    font-size: 14px;
+}
+
+.remove-item:hover {
+    background-color: #ff1a1a;
+}
+
+/* Кнопки "+" и "-" */
+.quantity-controls button {
+    background-color: #141414;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+    width: auto;  
+    transition: background-color 0.3s;
+}
+
+.quantity-controls button:hover {
+    background-color: #333;
+}
+
+/* Количество */
+.quantity-controls .quantity {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+/* Контейнер для элементов управления */
+.cart-controls {
+    display: flex;
+    flex-direction: column; /* Элементы располагаются вертикально */
+    align-items: center;    /* Центрируем по горизонтали */
+    gap: 15px;              /* Расстояние между элементами */
+    max-width: 600px;       /* Ограничиваем ширину контейнера */
+    width: 100%;            /* Занимает всю доступную ширину */
+    margin: 20px auto;      /* Центрируем контейнер */
+}
+
+/* Текстовое поле (textarea) */
+.cart-controls textarea {
+    width: 100%;                          /* Занимает всю доступную ширину */
+    padding: 10px 20px;                   /* Внутренние отступы */
+    border: 1px solid #ccc;               /* Обводка */
+    border-radius: 25px;                  /* Закругленные углы */
+    font-size: 16px;                      /* Размер текста */
+    color: #555;                          /* Цвет текста */
+    outline: none;                        /* Убираем стандартное выделение */
+    transition: border-color 0.3s ease;   /* Плавный переход цвета рамки */
+    resize: none;                         /* Отключаем изменение размера */
+}
+
+.cart-controls textarea::placeholder {
+    color: #aaa;                          /* Цвет текста placeholder */
+    font-style: italic;                   /* Курсив для placeholder */
+}
+
+.cart-controls textarea:focus {
+    border-color: #888;                   /* Цвет рамки при фокусе */
+}
+
+/* Поля ввода даты (input[type="date"]) */
+.cart-controls input[type="date"] {
+    width: 100%;                          /* Занимает всю доступную ширину */
+    padding: 10px 20px;                   /* Внутренние отступы */
+    border: 1px solid #ccc;               /* Обводка */
+    border-radius: 25px;                  /* Закругленные углы */
+    font-size: 16px;                      /* Размер текста */
+    color: #555;                          /* Цвет текста */
+    outline: none;                        /* Убираем стандартное выделение */
+    transition: border-color 0.3s ease;   /* Плавный переход цвета рамки */
+}
+
+.cart-controls input[type="date"]:focus {
+    border-color: #888;                   /* Цвет рамки при фокусе */
+}
+
+/* Кнопка "Сгенерировать PDF" */
+.cart-controls button {
+    width: 100%;                          /* Занимает всю доступную ширину */
+    padding: 10px 20px;                   /* Внутренние отступы */
+    background-color: #141414;            /* Цвет фона кнопки */
+    color: white;                         /* Цвет текста кнопки */
+    border: none;                         /* Убираем обводку */
+    border-radius: 25px;                  /* Закругленные углы */
+    font-size: 16px;                      /* Размер текста */
+    cursor: pointer;                      /* Указатель мыши */
+    transition: background-color 0.3s ease; /* Плавный переход цвета фона */
+}
+
+.cart-controls button:hover {
+    background-color: #333;               /* Цвет кнопки при наведении */
+}

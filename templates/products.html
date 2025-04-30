@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Товары</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+    <div class="product-list">
+        {% for product in products %}
+        <div class="product-card {% if product.quantityAvailable == 0 %}out-of-stock{% endif %}">
+            <img src="{{ product.imageURLs[0] }}" alt="{{ product.name }}">
+            <h3>{{ product.name }}</h3>
+            <p>{{ product.description }}</p>
+            <p>Остаток: {{ product.quantityAvailable }}</p>
+            <div class="actions">
+                <button onclick="updateCart({{ product.id }}, -1, {{ product.quantityAvailable }})">-</button>
+                <span id="quantity-{{ product.id }}">0</span>
+                <button onclick="updateCart({{ product.id }}, 1, {{ product.quantityAvailable }})">+</button>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    <button class="cart-button" onclick="window.location.href='/cart'">Перейти в корзину</button>
+
+    <script>
+        function updateCart(productId, change, maxQuantity) {
+            fetch('/update_cart', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id: productId, change: change, maxQuantity: maxQuantity })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.quantityInCart !== undefined) {
+                    document.getElementById(`quantity-${productId}`).innerText = data.quantityInCart;
+                }
+            });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script src="{{ url_for('static', filename='cart.js') }}" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+    <script type="module" src="{{ url_for('static', filename='cart.js') }}"></script>
+    <title>Корзина</title>
+</head>
+<body>
+    <div class="container2">
+        <header class="container2-header">
+            <h1>Корзина</h1>
+        </header>
+        <main>
+            <div class="cart-grid" id="cart-items">
+                <!-- Пример карточки товара -->
+                <!-- Товары из корзины будут добавляться динамически -->
+                <!--
+                <div class="cart-item" data-id="1">
+                <img src="/static/example-thumbnail.png" alt="Название товара" class="cart-item-image">
+                <div class="item-details">
+                <h3>Название товара</h3>
+                <p>ID: 1</p>
+                <div class="cart-item-actions">
+                <div class="quantity-controls">
+                <button class="decrease">-</button>
+                <span class="quantity">1</span>
+                <button class="increase">+</button>
+                </div>
+                <button class="remove-item">Удалить</button>
+                </div>
+                </div>
+                </div>
+                -->
+            </div>
+            <div class="cart-controls">
+                <textarea id="project-name" placeholder="Введите название проекта"></textarea>
+                <input type="date" id="delivery-date" placeholder="Дата отгрузки">
+                <input type="date" id="return-date" placeholder="Дата возврата">
+                <button id="generate-pdf">Сгенерировать PDF</button>
+            </div>
+        </main>
+    </div>
+</body>
+</html>

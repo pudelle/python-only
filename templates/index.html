@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script src="{{ url_for('static', filename='script.js') }}" defer></script>
+    <title>Складское приложение</title>
+</head>
+<body>
+    <div class="container">
+        <!-- Левое меню с категориями -->
+        <aside class="categories">
+            <div class="search-bar">
+                <input type="text" placeholder="Поиск товаров..." id="search-input" class="search-input">
+                <button class="search-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="20" width="20" fill="#888">
+                        <path d="M8.5 2a6.5 6.5 0 1 1-4.597 11.097l-4.2 4.2a.75.75 0 1 1-1.061-1.06l4.2-4.2A6.5 6.5 0 0 1 8.5 2Zm0 1.5a5 5 0 1 0 0 10 5 5 0 0 0 0-10Z"/>
+                    </svg>
+                </button>
+            </div>
+            
+            <div id="category-tree" class="category-tree">
+            </div>
+        </aside>
+        
+        <!-- Основная часть с поиском и карточками товаров -->
+        <main>
+            <div class="product-grid" id="product-grid">
+                {% for product in products %}
+                <div class="product-card {% if product.quantityAvailable == 0 %}out-of-stock{% endif %}" 
+                    data-id="{{ product.id }}" 
+                    data-category="{{ product.category }}" 
+                    data-max-quantity="{{ product.quantityAvailable }}">
+                    <img src="{{ product.imageURLs[0] if product.imageURLs else '/static/default.png' }}" alt="{{ product.name }}">
+                    <h3>{{ product.name }}</h3>
+                    <p class="product-description">
+                        {{ product.description | truncate(100, True, '...') }}
+                    </p>
+                    <div class="quantity-container">
+                        <p>Остаток: <span class="stock">{{ product.quantityAvailable|default(0) }}</span></p>
+                        <div class="quantity-controls">
+                            <button class="decrease">-</button>
+                            <span class="quantity">0</span>
+                            <button class="increase">+</button>
+                        </div>
+                    </div>                     
+                    <button class="add-to-cart">Добавить в корзину</button>
+                </div>
+                {% endfor %}
+            </div>
+        </main>
+    </div>
+    <!-- Модальное окно для отображения галереи и описания -->
+    <div id="product-modal" class="modal">
+        <div class="modal-content">
+            <!-- Кнопка закрытия -->
+            <span class="close">&times;</span>
+            
+            <!-- Основное содержимое окна -->
+            <div class="modal-body">
+                <!-- Фото товара -->
+                <div class="image-gallery">
+                    <img src="/static/default.png" alt="Фото товара" class="modal-image" id="modal-image">
+                </div>
+                
+                <!-- Описание и действия -->
+                <div class="details">
+                    <!-- Заголовок -->
+                    <h2 id="modal-product-name">Название товара</h2>
+                    
+                    <!-- Описание -->
+                    <p class="description-title">Описание:</p>
+                    <p id="modal-description">Подробное описание товара.</p>
+                    
+                    <!-- Управление количеством -->
+                    <div class="quantity-controls">
+                        <button class="decrease">-</button>
+                        <span class="quantity">1</span>
+                        <button class="increase">+</button>
+                    </div>
+                    
+                    <!-- Кнопка добавления в корзину -->
+                    <button class="add-to-cart">Добавить в корзину</button>
+                </div>
+            </div>
+        </div>
+    </div>    <div class="cart-button">
+        <button id="go-to-cart">Перейти в корзину</button>
+    </div>
+</body>
+</html>
